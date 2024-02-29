@@ -6,13 +6,6 @@ if [ "$(id -u)" != "0" ]; then
     exit 1
 fi
 
-# 2) Store user input "password" in a variable for creating a user
-read -sp "Please enter the password for the new user flo: " password
-echo
-
-# 3) Create a user "flo" with the password from instruction 2
-useradd -m -s /bin/bash -p "$(openssl passwd -1 $password)" flo
-
 # 4) apt-get update 
 apt-get update
 
@@ -48,5 +41,7 @@ chown -R flo:flo /home/flo/Documents
 # 12) Change the keyboard layout to AZERTY (France)
 localectl set-keymap fr
 
-echo "Script execution completed."
+# 13) Change the timezone to Paris
+timedatectl set-timezone Europe/Paris
 
+echo "Script execution completed."
