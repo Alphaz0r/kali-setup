@@ -38,8 +38,9 @@ mkdir -p /home/flo/Documents/THM
 # 11) Change ownership of the /home/flo/Documents directory to flo
 chown -R flo:flo /home/flo/Documents
 
-# 12) Change the keyboard layout to AZERTY (France)
-localectl set-keymap fr
+# 12) Change the keyboard layout to AZERTY (France) and make it permanent
+echo 'XKBLAYOUT="fr"' >> /etc/default/keyboard
+dpkg-reconfigure -f noninteractive keyboard-configuration
 
 # 13) Change the timezone to Paris
 timedatectl set-timezone Europe/Paris
