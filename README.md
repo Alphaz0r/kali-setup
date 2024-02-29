@@ -1,5 +1,6 @@
 TODO:
 
-- runuser pip install
-- change localctl because not persistent
+[]    runuser pip install
+[x]    change localctl because not persistent 
+[]  investigate wget bug
 
