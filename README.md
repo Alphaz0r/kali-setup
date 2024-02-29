@@ -1,6 +1,6 @@
 TODO:
 
-[]    runuser pip install
-[x]    change localctl because not persistent 
-[]  investigate wget bug
+- []    runuser pip install 
+- [x]    change localctl because not persistent 
+- []  investigate wget bug
 
