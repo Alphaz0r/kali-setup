@@ -6,17 +6,29 @@ if [ "$(id -u)" != "0" ]; then
     exit 1
 fi
 
-# 2. apt-get update 
+# Ask for the username
+read -p "Enter the username: " username
+
+# Check if the user exists
+if id "$username" >/dev/null 2>&1; then
+    echo "User $username exists. Using existing user."
+else
+    # Create the user with a password
+    useradd -m -s /bin/bash -p "$(openssl passwd -1)" "$username"
+    echo "User $username created."
+fi
+
+# 4. apt-get update 
 apt-get update
 
-# 3. apt-get install -y feroxbuster terminator 
+# 5. apt-get install -y feroxbuster terminator 
 apt-get install -y feroxbuster terminator
 
-# 4. Create a directory in /opt/ named "tools" and owned by user flo
+# 6. Create a directory in /opt/ named "tools" and owned by the specified user
 mkdir -p /opt/tools
-chown flo:flo /opt/tools
+chown "$username":"$username" /opt/tools
 
-# 5. Download files into /opt/tools directory using curl
+# 7. Download files into /opt/tools directory using curl
 cd /opt/tools
 curl -O https://raw.githubusercontent.com/21y4d/nmapAutomator/master/nmapAutomator.sh 
 curl -LO https://github.com/carlospolop/PEASS-ng/releases/download/20240226-e0f9d47b/linpeas.sh
@@ -26,26 +38,36 @@ curl -LO https://github.com/jpillora/chisel/releases/download/v1.9.1/chisel_1.9.
 curl -LO https://github.com/int0x33/nc.exe/raw/master/nc64.exe
 curl -LO https://github.com/int0x33/nc.exe/raw/master/nc.exe
 
-# 6. Change ownership of the entire /opt/tools directory to flo
-chown -R flo:flo /opt/tools
+# 7a. Extract chisel for Linux
+gunzip chisel_1.9.1_linux_amd64.gz
 
-# 7. mkdir /home/flo/Documents/HTB
-mkdir -p /home/flo/Documents/HTB
+# 7b. Extract chisel for Windows
+gunzip chisel_1.9.1_windows_amd64.gz
 
-# 8. mkdir /home/flo/Documents/THM
-mkdir -p /home/flo/Documents/THM
+# 7c. Remove the compressed files
+rm chisel_1.9.1_linux_amd64.gz chisel_1.9.1_windows_amd64.gz
 
-# 9. Change ownership of the /home/flo/Documents directory to flo
-chown -R flo:flo /home/flo/Documents
+# 8. Change permissions and ownership of the entire /opt/tools directory to the specified user
+chmod +x linpeas.sh nmapAutomator.sh
+chown -R "$username":"$username" /opt/tools
 
-# 10. Change the keyboard layout to AZERTY (France) and make it permanent
+# 9. mkdir /home/$USER/Documents/HTB
+mkdir -p /home/"$username"/Documents/HTB
+
+# 10. mkdir /home/$USER/Documents/THM
+mkdir -p /home/"$username"/Documents/THM
+
+# 11. Change ownership of the /home/$USER/Documents directory to the specified user
+chown -R "$username":"$username" /home/"$username"/Documents
+
+# 12. Change the keyboard layout to AZERTY (France) and make it permanent
 echo 'XKBLAYOUT="fr"' >> /etc/default/keyboard
 dpkg-reconfigure -f noninteractive keyboard-configuration
 
-# 11. Change the timezone to Paris
+# 13. Change the timezone to Paris
 timedatectl set-timezone Europe/Paris
 
-# 12. Additional command: runuser flo pip install pwncat-cs
-runuser flo pip install pwncat-cs
+# 14. Additional command: su -l $USER -c '/usr/bin/pip install pwncat-cs'
+su -l "$username" -c '/usr/bin/pip install pwncat-cs'
 
 echo "Script execution completed."
