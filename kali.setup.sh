@@ -22,7 +22,7 @@ fi
 apt-get update
 
 # 5. apt-get install -y feroxbuster terminator 
-apt-get install -y feroxbuster terminator
+apt-get install -y feroxbuster terminator nuclei
 
 # 6. Create a directory in /opt/ named "tools" and owned by the specified user
 mkdir -p /opt/tools
@@ -71,6 +71,6 @@ timedatectl set-timezone Europe/Paris
 su -l "$username" -c '/usr/bin/pip install pwncat-cs'
 
 # searchsploit update
-searchspoit -u
+searchsploit -u
 
 echo "Script execution completed."
