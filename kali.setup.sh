@@ -67,7 +67,10 @@ dpkg-reconfigure -f noninteractive keyboard-configuration
 # 13. Change the timezone to Paris
 timedatectl set-timezone Europe/Paris
 
-# 14. Additional command: su -l $USER -c '/usr/bin/pip install pwncat-cs'
+# 14. Additional tool: pwncat
 su -l "$username" -c '/usr/bin/pip install pwncat-cs'
+
+# searchsploit update
+searchspoit -u
 
 echo "Script execution completed."
